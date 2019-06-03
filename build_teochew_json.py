@@ -11,6 +11,7 @@ class TeochewHTMLParser(HTMLParser):
         self.chineseChar = None
         self.chineseCharEntry = {}
         self.last_listItemKey = None
+        self.chaoyinList = []
         
 
     def handle_starttag(self, tag, attrs):
@@ -24,15 +25,37 @@ class TeochewHTMLParser(HTMLParser):
             self.chineseChar = data
         
         if self.last_starttag == 'b':
-            if data in ('潮州音：', '汕头音：', '拼    音：', '字    义：' ):
-                self.last_listItemKey = data
+            self.last_listItemKey = data
+
+        if self.last_endtag == 'b':
+            if self.last_listItemKey in ('潮州音：,汕头音：'):
+                self.appendChaoyinList(data)
             
+            if self.last_listItemKey == '拼    音：':
+                print('do some more logic here')
             
+            if self.last_listItemKey == '字    义：':
+                print('run some other method here')
+            
+    def extractChaoyin(self, data: str) -> str:
+        chaoyinSplit = data.strip('[ ').split()
+        parenthesisIndex = chaoyinSplit[1].find('（')
         
+        while ~parenthesisIndex:
+            chaoyinSplit[0] += '('+chaoyinSplit[1][parenthesisIndex+1]+')'
+            parenthesisIndex = chaoyinSplit[1].find('（',parenthesisIndex+3)
+        
+        return chaoyinSplit[0]
+    
+    def appendChaoyinList(self, chaoyin: str) -> None:
+        self.chaoyinList.append((self.last_listItemKey,chaoyin,self.isValidChaoyin(chaoyin)))
+    
+    def isValidChaoyin(self, chaoyin: str) -> bool:
+        return ('iê', 'iou', 'uêg', 'uêng') not in chaoyin
 
 
 parser = TeochewHTMLParser()
-
+print(parser.extractChaoyin('[dion1 场1]（白）（姓）'))
 
 
 #teochewDict = {
