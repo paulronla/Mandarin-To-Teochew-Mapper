@@ -72,12 +72,11 @@ class Teochew_Dict_HTMLParser(HTMLParser):
         self._chaoyinTupleList.append((self._last_listItemKey,chaoyin,self._isValidChaoyin(chaoyin)))
     
     def _isValidChaoyin(self, chaoyin: str) -> bool:
-        ans = True
-
         for suffix in ('iê', 'iou', 'uêg', 'uêng'):
-            ans &= suffix not in chaoyin
+            if suffix in chaoyin:
+                return False
 
-        return ans
+        return True
 
     def _processCharDef(self, entry: str) -> Dict[str,str]:
         entryChunks = entry.split()
@@ -88,7 +87,7 @@ class Teochew_Dict_HTMLParser(HTMLParser):
 
             if ~periodIdx:
                 potentialPinyinChaoyinMapping = chunk[periodIdx+1:]
-                potentialPinyinChaoyinMapping = potentialPinyinChaoyinMapping.split('||')
+                potentialPinyinChaoyinMapping = potentialPinyinChaoyinMapping.split('[') if '[' in potentialPinyinChaoyinMapping else potentialPinyinChaoyinMapping.split('||')
                 
                 if len(potentialPinyinChaoyinMapping) > 1:
                     pinyin = potentialPinyinChaoyinMapping[0]
@@ -105,10 +104,14 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                             break
         
         if not charPinyinChaoyin:
-            if len(self._pinyinList) > 1:
-                print('Error: More than one pinyin, but no mapping provided for Chinese char: '+ self._chineseChar)
+            if len(self._pinyinList) > 1 and len(self._chaoyinTupleList) > 1:
+                print('More than one pinyin and chaoyin, but no mapping provided for Chinese char: '+ self._chineseChar)
             
-            charPinyinChaoyin[self._transformPinyinTone(self._pinyinList[0])] = '|'.join([chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2]])
+            firstPinyin = self._transformPinyinTone(self._pinyinList[0]) if self._pinyinList else ''
+            charPinyinChaoyin[firstPinyin] = '|'.join([chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2]])
+
+            for i in range(1,len(self._pinyinList)):
+                charPinyinChaoyin[self._transformPinyinTone(self._pinyinList[i])] = charPinyinChaoyin[firstPinyin]
 
         return charPinyinChaoyin
 
