@@ -1,6 +1,6 @@
 #coding=utf-8
 from html.parser import HTMLParser
-from typing import Dict
+from typing import Dict, List
 from re import sub
 from html import escape
 
@@ -69,9 +69,9 @@ class Teochew_Dict_HTMLParser(HTMLParser):
     
     def _appendChaoyinList(self, data: str) -> None:
         chaoyin = self._extractChaoyin(data)
-        self._chaoyinTupleList.append((self._last_listItemKey,chaoyin,self._isValidChaoyin(chaoyin)))
+        self._chaoyinTupleList.append((self._last_listItemKey,chaoyin,self._isPrestigeChaoyin(chaoyin)))
     
-    def _isValidChaoyin(self, chaoyin: str) -> bool:
+    def _isPrestigeChaoyin(self, chaoyin: str) -> bool:
         for suffix in ('iê', 'iou', 'uêg', 'uêng'):
             if suffix in chaoyin:
                 return False
@@ -114,6 +114,56 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                 charPinyinChaoyin[self._transformPinyinTone(self._pinyinList[i])] = charPinyinChaoyin[firstPinyin]
 
         return charPinyinChaoyin
+
+    def _processCharDef2(self, entry: str) -> Dict[str,str]:
+        charPinyinChaoyin = {}
+        word = []
+        chaoyinList = []
+        currPinyin = None
+
+        for char in entry:
+            char = char.lower()
+            if char in {'0','1','2','3','4','5','6','7','8','9',
+                'a','b','c','d','e','f','g','h','i','j','k','l','m',
+                'n','o','p','q','r','s','t','u','v','w','x','y','z',
+                'ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō',
+                'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
+                word.append(char)
+            
+            if self._isChaoyin(word):
+                potentialChaoyin = ''.join(word)
+
+                for chaoyinTuple in self._chaoyinTupleList:
+                    chaoyin = chaoyinTuple[1].split('(')[0]
+
+                    if chaoyin in potentialChaoyin and chaoyinTuple[2]:
+                        chaoyinList.append(chaoyin)
+                        break
+
+            else:
+                potentialPinyin = ''.join(word)
+
+                for pinyin in self._pinyinList:
+                    if pinyin in potentialPinyin:
+                        if currPinyin and chaoyinList:
+                            charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
+                            
+                        currPinyin = pinyin
+                        chaoyinList = []
+
+        return charPinyinChaoyin
+
+    def _generatePinyinChaoyinMapping(self, pinyin: str, chaoyinList: List[str], charPinyinChaoyin: Dict[str,str]) -> Dict[str,str]:
+        #TODO
+        return charPinyinChaoyin
+
+    def _isChaoyin(self, word: List[str]) -> bool:
+        char = word[-1]
+
+        if char > '0' and char < '9' and word[-2].isalpha:
+            return True
+        
+        return False
 
     def _transformPinyinTone(self, pinyin: str) -> str:
         for char in pinyin:
