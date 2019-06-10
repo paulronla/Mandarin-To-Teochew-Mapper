@@ -39,7 +39,7 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                 self._appendChaoyinList(data)
             
             if self._last_listItemKey == '拼    音：':
-                self._pinyinList.append(data.strip())
+                self._pinyinList.append(self._transformPinyinTone(data.strip()))
             
             if self._last_listItemKey == '字    义：':
                 self._chineseCharEntry = self._processCharDef(data)
@@ -79,43 +79,6 @@ class Teochew_Dict_HTMLParser(HTMLParser):
         return True
 
     def _processCharDef(self, entry: str) -> Dict[str,str]:
-        entryChunks = entry.split()
-        charPinyinChaoyin = {}
-
-        for chunk in entryChunks:
-            periodIdx = chunk.find('.')
-
-            if ~periodIdx:
-                potentialPinyinChaoyinMapping = chunk[periodIdx+1:]
-                potentialPinyinChaoyinMapping = potentialPinyinChaoyinMapping.split('[') if '[' in potentialPinyinChaoyinMapping else potentialPinyinChaoyinMapping.split('||')
-                
-                if len(potentialPinyinChaoyinMapping) > 1:
-                    pinyin = potentialPinyinChaoyinMapping[0]
-                    chaoyinList = potentialPinyinChaoyinMapping[1].split('|')
-                else:
-                    chaoyinList = potentialPinyinChaoyinMapping[0].split('|')
-
-                for ziyiChaoyin in chaoyinList:
-                    for chaoyinTuple in self._chaoyinTupleList:
-                        chaoyin = chaoyinTuple[1].split('(')[0]
-                        if chaoyin in ziyiChaoyin and chaoyinTuple[2]:
-                            newPinyin = self._transformPinyinTone(pinyin)
-                            charPinyinChaoyin[newPinyin] = charPinyinChaoyin[newPinyin]+'|'+chaoyinTuple[1] if newPinyin in charPinyinChaoyin else chaoyinTuple[1]
-                            break
-        
-        if not charPinyinChaoyin:
-            if len(self._pinyinList) > 1 and len(self._chaoyinTupleList) > 1:
-                print('More than one pinyin and chaoyin, but no mapping provided for Chinese char: '+ self._chineseChar)
-            
-            firstPinyin = self._transformPinyinTone(self._pinyinList[0]) if self._pinyinList else ''
-            charPinyinChaoyin[firstPinyin] = '|'.join([chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2]])
-
-            for i in range(1,len(self._pinyinList)):
-                charPinyinChaoyin[self._transformPinyinTone(self._pinyinList[i])] = charPinyinChaoyin[firstPinyin]
-
-        return charPinyinChaoyin
-
-    def _processCharDef2(self, entry: str) -> Dict[str,str]:
         charPinyinChaoyin = {}
         word = []
         chaoyinList = []
@@ -129,19 +92,30 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                 'ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō',
                 'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
                 word.append(char)
+                continue
+
+            elif len(word) < 2:
+                word = []
+                continue
             
             if self._isChaoyin(word):
                 potentialChaoyin = ''.join(word)
+                word = []
+
+                if potentialChaoyin in [chaoyin.split('(')[0] for chaoyin in chaoyinList]:
+                    continue
 
                 for chaoyinTuple in self._chaoyinTupleList:
                     chaoyin = chaoyinTuple[1].split('(')[0]
 
-                    if chaoyin in potentialChaoyin and chaoyinTuple[2]:
-                        chaoyinList.append(chaoyin)
+                    if chaoyin == potentialChaoyin and chaoyinTuple[2]:
+                        chaoyinList.append(chaoyinTuple[1])
                         break
 
             else:
                 potentialPinyin = ''.join(word)
+                potentialPinyin = self._transformPinyinTone(potentialPinyin)
+                word = []
 
                 for pinyin in self._pinyinList:
                     if pinyin in potentialPinyin:
@@ -151,10 +125,43 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                         currPinyin = pinyin
                         chaoyinList = []
 
+        if currPinyin and chaoyinList:
+            charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
+
+        missedPinyinList = [pinyin for pinyin in self._pinyinList if pinyin not in charPinyinChaoyin]
+        missedChaoyinList = [chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2] and chaoyinTuple[1] not in set('|'.join(charPinyinChaoyin.values()).split('|'))]
+
+        if missedPinyinList and missedChaoyinList:
+            charPinyinChaoyin[missedPinyinList[0]] = '|'.join(missedChaoyinList)
+
+            for i in range(1,len(missedPinyinList)):
+                charPinyinChaoyin[missedPinyinList[i]] = charPinyinChaoyin[missedPinyinList[0]]
+        
+        elif missedPinyinList:
+            charPinyinChaoyin[missedPinyinList[0]] = '|'.join([chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2]])
+
+            for i in range(1,len(missedPinyinList)):
+                charPinyinChaoyin[missedPinyinList[i]] = charPinyinChaoyin[missedPinyinList[0]]
+        
+        elif missedChaoyinList:
+            for chaoyin in missedChaoyinList:
+                if not charPinyinChaoyin:
+                    charPinyinChaoyin[''] = chaoyin
+                    continue
+
+                for pinyin in charPinyinChaoyin:
+                    charPinyinChaoyin[pinyin] += '|'+chaoyin
+
         return charPinyinChaoyin
 
     def _generatePinyinChaoyinMapping(self, pinyin: str, chaoyinList: List[str], charPinyinChaoyin: Dict[str,str]) -> Dict[str,str]:
-        #TODO
+        if pinyin in charPinyinChaoyin:
+            for chaoyin in chaoyinList:
+                if chaoyin not in charPinyinChaoyin[pinyin]:
+                    charPinyinChaoyin[pinyin] += '|'+chaoyin
+        else:
+            charPinyinChaoyin[pinyin] = '|'.join(chaoyinList)
+
         return charPinyinChaoyin
 
     def _isChaoyin(self, word: List[str]) -> bool:

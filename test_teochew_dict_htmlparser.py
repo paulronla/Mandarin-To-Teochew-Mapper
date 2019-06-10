@@ -417,6 +417,257 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </dd>
              </dl>''')
         self.assertEqual(parser.getTeochewDict(),{'陂': {'bei1': 'bi1', 'pi2': 'pi5', 'po1': 'po1|bo1(汕)'}, '𫢗': {'': 'diang5'}, '仆': {'pu1': 'pog4', 'pu2': 'bog8'}, '鶪': {'ju2': 'gu6'}, '谁': {'shui2': 'sui5', 'shei2': 'sui5'}, '熟': {'shu2': 'sêg8', 'shou2': 'sêg8'}})
+        parser = Teochew_Dict_HTMLParser()
+        parser.feed('''<dl>
+                <dt>
+                  <p>贠</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>繁异体：</b>貟</li>
+ 		
+ 		            <li><b>潮州音：</b>[uêng5 完]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/450BF814-085C-47F6-88A7-A5C407F726D7.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>汕头音：</b>[uang5 王]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/716FFCBD-5FDD-489A-9E89-A5CDA920A442.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>揭阳音：</b>[uang5 王]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/716FFCBD-5FDD-489A-9E89-A5CDA920A442.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>澄海音：</b>[uang5 王]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/716FFCBD-5FDD-489A-9E89-A5CDA920A442.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮阳音：</b>[uang5 王]
+ 		
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ung7 运]（姓）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/FA44A7CF-070D-4203-9221-B9CF235B1AF4.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>yuán  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/4F2D1A8F-EB4B-4399-93A9-E688A2981CA6.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>yùn  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/0269A9A4-2B92-4891-82AF-93AF745BA1D1.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.yuán [uêng5 完][uang5 王] 古同“员”。2.yùn[ung7 运] 姓。唐代有贠半千。</li>
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>渐</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>繁异体：</b>漸</li>
+ 		
+ 		            <li><b>潮州音：</b>[ziam6 尖6]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/B37AE409-962B-4F09-A0D9-EFDF1E748CD5.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>澄海音：</b>[ziang6 尖6]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/DE03C987-02E3-4093-828A-002B379AD8CE.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ziam1 尖]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/9EA15090-C256-477D-B599-BA80F7436C47.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>澄海音：</b>[ziang1 尖]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/3014D5B2-C49F-47D5-953C-80166E558C44.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>jiàn  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/F538EE75-EB6C-4CF9-9097-FCB6088BA689.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>jiān  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/4D1D4E3A-BE95-46C0-A851-BEA37C61CACA.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>㊀jiàn||ziam6|澄ziang6 ①副词，慢慢地，一点一点地：循序~进|~入佳境|他的病~~好了。②<书>苗头：防微杜~。㊁jiān||ziam1|澄ziang1 ①浸：~染（同于经常接触，自然而然地受到影响）。②流入：东~于海。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>嗳</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>繁异体：</b>噯</li>
+ 		
+ 		            <li><b>潮州音：</b>[ai3 哀3]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/1E838100-1A4D-4798-8E33-D3E385969868.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[an6 馅6]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/3785CA38-4826-4946-9872-38DFB6770D8E.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ai7 哀7]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/B1CC2079-45AD-4E66-9509-918C4DC23D7E.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ai1 哀]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/C3D71A4E-271D-4FAE-A1B7-7F48C01E7346.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>ǎi  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/1B4D805B-8618-4C0C-B809-B107F98F0FD9.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>ài  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/FE870030-3122-4BFF-AE61-67B4C7520A59.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>āi  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/01EEBC53-52B0-460D-AC2D-E54E702AF0AC.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>①ǎi [ai3 哀3][an6 馅6] 叹词，表示否定或不同意：~，别那么说|~，不是这样放。
+②ài [ai7 哀7] 叹词，表示懊恼、悔恨：~早知道是这样，我就不来了。
+③āi [ai1 哀]同“哎”。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>赚</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>繁异体：</b>賺</li>
+ 		
+ 		            <li><b>潮州音：</b>[tang3 塘3]（俗）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/72E42123-2841-449B-9379-DA2F28D474EB.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[zuang3 装3]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/9E863883-C316-4FFD-ABB2-FC2375D23B52.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>zhuàn  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/0312CCA7-06C3-4072-8350-DF0B6F61CC47.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>zuàn  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/C2C4F2D4-D8B9-4F34-AC77-91BDCFC6E69B.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>㊀zhuàn[tang3 塘3]做买卖得利：~钱。㊁zuàn 诳骗：~人。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>个</p>	
+                </dt>
+                <dd><ul>
+  	    
+ 		            <li><b>繁异体：</b>個</li>
+ 		
+ 		            <li><b>潮州音：</b>[gai5 介5]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/932484F2-94B7-455A-82EF-F27015F397DE.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[gai7 介7]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/37295302-7CCE-4AB2-85C5-0D56D2CDD288.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[go6 哥]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/758DA97E-4E52-429B-95FD-80971D11E233.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>gè  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/0AC415D7-9682-49B9-BE63-9C4D5D6CC2C9.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>gě  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/B9C28537-2C5F-4653-A3B3-A332C7044D20.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.gè||gai5 ①量词：a.指一般单位的东西：三~月|一~人|五~苹果。b.指一次动作行为：一~不留神|给他~不理。c.<潮>货币单位，元：一斤三~（500 克 3 块钱）。②人或物的体积：高~子|小~儿|馒头~儿不小。 2.gè||go6 单独的：~人|~体。 3.gai7 <潮>①结构助词，同“的”：我~|红~。②对，跟，介词：~伊呾（跟他说）。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>二</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>大写字：</b>贰（貳）</li>
+
+ 		            <li><b>潮州音：</b>[no6 努6]（训）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/13474AC5-39F6-4D36-8398-E6BA0B4EEDAB.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ri6 字6]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/7DD84BF6-54FE-47C5-ACD3-909681B6E0AF.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>èr  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/C195DEDD-A529-4AC9-804F-BF89AE0C6198.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.èr||no6 ①数目字：~个|两丈~尺。②两样：不要三心~意。☞[no6]的本字是“两”。 2.èr||ri6 序数：第~|~等货。</li>
+                    
+                </ul>
+                </dd>
+             </dl>''')
+        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}})
 
 if __name__ == '__main__':
     unittest.main()
