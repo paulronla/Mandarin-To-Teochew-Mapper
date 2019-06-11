@@ -666,8 +666,88 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                     
                 </ul>
                 </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>阿</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>潮州音：</b>[a1 亚]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/A234E9BB-E62A-4E57-B5C8-270F81218E18.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[o1 窝]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/3DD9F61C-77D5-48F7-A404-584D475F86D5.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>ā  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/31502FCF-C7E9-4517-A7CD-E1F63165A0A5.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>ē  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/C9B771A8-896A-489C-A48C-4DB05B1B472E.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.ā||a1 ①<方>词头，加在排行、小名或姓的前面：~大|~根|~王。②<方>加在某些亲尾称谓的前面：~妹|~姨|~公。③<潮>加在人名前面：~王菲|~山|~红。④音译用字：~门（基督教祈祷的结束语）|~拉伯人（分布于西亚、北非的一个民族）|~斯匹林（一种解热镇痛药）。⑤<潮>用在正反问句中表示选择，相当于普通话中的“还是”：是~（上不下是）[mi6]？|食茶~食咖啡？| 行路去~（是）坐船去？ 2.ē||o1 ①迎合，偏袒：~附|~其所好|~谀奉迎。②凹曲处：山~。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>殖</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>潮州音：</b>[sêg4 植]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/9C839EC2-02BE-4C34-A4E2-747DCBABA960.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>汕头音：</b>[sig8 植]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/7EB4D1BC-5301-46B1-9603-3F8C10640F43.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>澄海音：</b>[sig8 植]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/7EB4D1BC-5301-46B1-9603-3F8C10640F43.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[sig8 实]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/7EB4D1BC-5301-46B1-9603-3F8C10640F43.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>揭阳音：</b>[sêg8 实]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/C0C08FEE-9533-4856-8250-A8CA3F2FB1E9.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>zhí  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/431928CF-90A6-45E0-882C-6CD9ED9C2469.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>shi  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/8BD1E7E6-F6F4-4DDF-A230-6A31E157EC50.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.zhí||sêg4|汕澄sig8 生息，孳生：繁~。 2.shi||sig8|揭sêg8 尸骨：骨~。</li>
+                    
+                </ul>
+                </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}})
+        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}, '阿': {'a1': 'a1', 'e1': 'o1'}, '殖': {'zhi2': 'sêg4|sig8', 'shi5': 'sig8'}})
 
 if __name__ == '__main__':
     unittest.main()

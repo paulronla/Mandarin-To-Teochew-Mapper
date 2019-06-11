@@ -69,6 +69,12 @@ class Teochew_Dict_HTMLParser(HTMLParser):
     
     def _appendChaoyinList(self, data: str) -> None:
         chaoyin = self._extractChaoyin(data)
+
+        for idx in [idx for idx, chaoyinTuple in enumerate(self._chaoyinTupleList) if chaoyin.split('(')[0] in chaoyinTuple[1]]:
+            tup = self._chaoyinTupleList[idx] 
+            self._chaoyinTupleList[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
+            return
+        
         self._chaoyinTupleList.append((self._last_listItemKey,chaoyin,self._isPrestigeChaoyin(chaoyin)))
     
     def _isPrestigeChaoyin(self, chaoyin: str) -> bool:
@@ -93,10 +99,6 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                 'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
                 word.append(char)
                 continue
-
-            elif len(word) < 2:
-                word = []
-                continue
             
             if self._isChaoyin(word):
                 potentialChaoyin = ''.join(word)
@@ -114,22 +116,28 @@ class Teochew_Dict_HTMLParser(HTMLParser):
 
             else:
                 potentialPinyin = ''.join(word)
+
+                if not potentialPinyin or potentialPinyin.isdigit():
+                    word = []
+                    continue
+
                 potentialPinyin = self._transformPinyinTone(potentialPinyin)
                 word = []
 
                 for pinyin in self._pinyinList:
-                    if pinyin in potentialPinyin:
+                    if pinyin == potentialPinyin:
                         if currPinyin and chaoyinList:
                             charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
                             
                         currPinyin = pinyin
                         chaoyinList = []
+                        break
 
         if currPinyin and chaoyinList:
             charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
 
         missedPinyinList = [pinyin for pinyin in self._pinyinList if pinyin not in charPinyinChaoyin]
-        missedChaoyinList = [chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2] and chaoyinTuple[1] not in set('|'.join(charPinyinChaoyin.values()).split('|'))]
+        missedChaoyinList = [chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2] and chaoyinTuple[1] not in '|'.join(charPinyinChaoyin.values()).split('|')]
 
         if missedPinyinList and missedChaoyinList:
             charPinyinChaoyin[missedPinyinList[0]] = '|'.join(missedChaoyinList)
@@ -165,6 +173,9 @@ class Teochew_Dict_HTMLParser(HTMLParser):
         return charPinyinChaoyin
 
     def _isChaoyin(self, word: List[str]) -> bool:
+        if len(word) < 2:
+            return False
+
         char = word[-1]
 
         if char > '0' and char < '9' and word[-2].isalpha:
