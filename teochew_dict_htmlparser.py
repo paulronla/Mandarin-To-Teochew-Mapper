@@ -70,7 +70,7 @@ class Teochew_Dict_HTMLParser(HTMLParser):
     def _appendChaoyinList(self, data: str) -> None:
         chaoyin = self._extractChaoyin(data)
 
-        for idx in [idx for idx, chaoyinTuple in enumerate(self._chaoyinTupleList) if chaoyin.split('(')[0] in chaoyinTuple[1]]:
+        for idx in [idx for idx, chaoyinTuple in enumerate(self._chaoyinTupleList) if chaoyin.split('(')[0] == chaoyinTuple[1].split('(')[0]]:
             tup = self._chaoyinTupleList[idx] 
             self._chaoyinTupleList[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
             return
@@ -165,7 +165,7 @@ class Teochew_Dict_HTMLParser(HTMLParser):
     def _generatePinyinChaoyinMapping(self, pinyin: str, chaoyinList: List[str], charPinyinChaoyin: Dict[str,str]) -> Dict[str,str]:
         if pinyin in charPinyinChaoyin:
             for chaoyin in chaoyinList:
-                if chaoyin not in charPinyinChaoyin[pinyin]:
+                if chaoyin not in charPinyinChaoyin[pinyin].split('|'):
                     charPinyinChaoyin[pinyin] += '|'+chaoyin
         else:
             charPinyinChaoyin[pinyin] = '|'.join(chaoyinList)
@@ -184,21 +184,32 @@ class Teochew_Dict_HTMLParser(HTMLParser):
         return False
 
     def _transformPinyinTone(self, pinyin: str) -> str:
+        ans = pinyin
+
         for char in pinyin:
+            if char == 'ü':
+                ans = ans.replace(char,'u:',1)
+                continue
+
             if ord(char) > 127:
-                idx = 'āáǎàēéěèīíǐìōóǒòūúǔù'.find(char)
+                idx = 'āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ'.find(char)
+                if idx < 0:
+                    print(pinyin + ' was not transformed correctly')
+                    return pinyin
                 if idx < 4:
-                    return pinyin.replace(char,'a',1)+str(idx % 4 + 1)
+                    return ans.replace(char,'a',1)+str(idx % 4 + 1)
                 if idx < 8:
-                    return pinyin.replace(char,'e',1)+str(idx % 4 + 1)
+                    return ans.replace(char,'e',1)+str(idx % 4 + 1)
                 if idx < 12:
-                    return pinyin.replace(char,'i',1)+str(idx % 4 + 1)
+                    return ans.replace(char,'i',1)+str(idx % 4 + 1)
                 if idx < 16:
-                    return pinyin.replace(char,'o',1)+str(idx % 4 + 1)
+                    return ans.replace(char,'o',1)+str(idx % 4 + 1)
                 if idx < 20:
-                    return pinyin.replace(char,'u',1)+str(idx % 4 + 1)
+                    return ans.replace(char,'u',1)+str(idx % 4 + 1)
+                if idx < 24:
+                    return ans.replace(char,'u:',1)+str(idx % 4 + 1)
         
-        return pinyin+'5'
+        return ans+'5'
     
     def _resetStateForNextChar(self) -> None:
         self._last_starttag = None

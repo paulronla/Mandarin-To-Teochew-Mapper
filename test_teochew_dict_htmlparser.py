@@ -746,8 +746,81 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                     
                 </ul>
                 </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>五</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>大写字：</b>伍</li>
+
+ 		            <li><b>潮州音：</b>[ngou6 午6]（白）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/B5A82F8A-F587-4496-99FC-B3FD9437BEE0.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[ngou2 午]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/53888A1F-26D6-4920-A0E5-4DEE90A065DD.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[u2 宇]（文）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/A47BBFF5-58FF-419D-98CF-54AF323A871C.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[u5 吾]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/A9906E46-BBD5-4052-91D5-DFA40E9DC11C.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>wǔ  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/04C38240-F81D-4617-9B39-16B7C8E651E8.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.wǔ||ngou6 数目字，四加一的和：~人|~本书|~十~元。 2.wǔ||ngou2 义同“1”，多用于书面语：~岳|三皇~帝|三令~申|~谷不分。 3.wǔ||u2 义同“1”：二一添作~。 4.wǔ||u5 旧时乐谱记音符号的一个，相当于简谱的“6”。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>喔</p>	
+                </dt>
+                <dd>
+
+                <ul>
+  	    
+ 		            <li><b>潮州音：</b>[o1 窝]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/3DD9F61C-77D5-48F7-A404-584D475F86D5.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[og4 屋]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/C20C91BA-55AD-4131-9646-4E9CBE69933B.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>ō  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/A5594213-3D8D-485E-850E-5B372E671D68.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>wō  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/47829251-7BA5-49FC-A79C-6FD30F3DD34D.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.ō||o1 叹词，表示了解：~，就是他！|~，我懂了。又表示惊异、痛苦：~哟，这么大的西瓜！|~哟，好痛！ 2.wō||og4 鸡叫声。</li>
+                    
+                </ul>
+                </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}, '阿': {'a1': 'a1', 'e1': 'o1'}, '殖': {'zhi2': 'sêg4|sig8', 'shi5': 'sig8'}})
+        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}, '阿': {'a1': 'a1', 'e1': 'o1'}, '殖': {'zhi2': 'sêg4|sig8', 'shi5': 'sig8'}, '五': {'wu3': 'ngou6(白)|ngou2|u2(文)|u5'}, '喔': {'o1': 'o1', 'wo1': 'og4'}})
 
 if __name__ == '__main__':
     unittest.main()
