@@ -1,4 +1,6 @@
 #coding=utf-8
+import sys
+sys.path.append('../.')
 import unittest
 import json
 from teochew_dict_htmlparser import Teochew_Dict_HTMLParser
