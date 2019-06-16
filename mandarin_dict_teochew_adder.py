@@ -8,8 +8,21 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
     chaoyinList = []
 
     for i,pinyin in enumerate(pinyinList):
-        chaoyin = pinyinChaoyinDict[simpChineseChars[i]][pinyin]
-        chaoyinList.append(chaoyin)
+        char = simpChineseChars[i]
+        pinyin = pinyin.lower()
+        
+        if char in pinyinChaoyinDict:
+            pinyinChaoyinMapping = pinyinChaoyinDict[char]
+            
+            if pinyin in pinyinChaoyinMapping:
+                chaoyin = pinyinChaoyinMapping[pinyin]
+                chaoyinList.append(chaoyin)
+
+            else:
+                chaoyinList.append('|'.join({chaoyin:None for chaoyinGroup in pinyinChaoyinMapping.values() for chaoyin in chaoyinGroup.split('|')}))
+        
+        else:
+            chaoyinList.append('???')
     
     return word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] /' + ' '.join(chaoyinList) + word.getDefinitions()
 
