@@ -5,10 +5,12 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
     word = DictEntry(line)
     pinyinList = word.getPinyinList()
     simpChineseChars = word.getSimpChars()
+    validSimpChineseChars = _mapInvalidChars(simpChineseChars)
     chaoyinList = []
+    chaoyinStr = ''
 
     for i,pinyin in enumerate(pinyinList):
-        char = simpChineseChars[i]
+        char = validSimpChineseChars[i]
         pinyin = pinyin.lower()
         
         if char in pinyinChaoyinDict:
@@ -23,8 +25,26 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
         
         else:
             chaoyinList.append('???')
+
+    for chaoyin in chaoyinList:
+        if chaoyin != '???':
+            chaoyinStr = '/' + ' '.join(chaoyinList)
+            break
     
-    return word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] /' + ' '.join(chaoyinList) + word.getDefinitions()
+    return word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] ' + chaoyinStr + word.getDefinitions()
+
+def _mapInvalidChars(chineseWords: str) -> str:
+    ans = []
+
+    for char in chineseWords:
+        if char.isdigit():
+            ans.append(['〇','一','二','三','四','五','六','七','八','九'][ord(char)-48])
+        elif char in '，。？！':
+            continue
+        else:
+            ans.append(char)
+    
+    return ''.join(ans)
 
 class DictEntry:
     def __init__(self, line: str):
