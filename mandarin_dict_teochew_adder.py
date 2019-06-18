@@ -1,7 +1,7 @@
 #coding=utf-8
 from typing import List, Dict, Tuple
 
-def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str]]) -> str:
+def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str]]) -> (str, int):
     word = DictEntry(line)
     pinyinList = word.getPinyinList()
     simpChineseChars = word.getSimpChars()
@@ -31,14 +31,14 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
             chaoyinStr = '/' + ' '.join(chaoyinList)
             break
     
-    return word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] ' + chaoyinStr + word.getDefinitions()
+    return (word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] ' + chaoyinStr + word.getDefinitions(), len(chaoyinStr))
 
 def _mapInvalidChars(chineseWords: str) -> str:
     ans = []
 
     for char in chineseWords:
         if char.isdigit():
-            ans.append(['〇','一','二','三','四','五','六','七','八','九'][ord(char)-48])
+            ans.append(['〇','一','二','三','四','五','六','七','八','九'][int(char)])
         elif char in '，。？！':
             continue
         else:
