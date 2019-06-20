@@ -15,13 +15,21 @@ class Test_Build_Mandarin_Teochew_Dict(unittest.TestCase):
 
     def test_updateIdxDict(self):
         oldIdxDict = {'成熟': [2729817], '美國': [5356318], '倒數': [568206,568344]}
-        newIdxDict = {}
-        for key in oldIdxDict:
-            newIdxDict[key] = []
+        newIdxDict = {key:[] for key in oldIdxDict}
         runningCnt = 0
 
         dictTuple = updateIdxDict('倒數', oldIdxDict, newIdxDict, runningCnt)
         runningCnt += 10
         self.assertEqual(dictTuple, ({'成熟': [2729817], '美國': [5356318], '倒數': [568344]}, {'成熟': [], '美國': [], '倒數': [568206]}))
+        
         dictTuple = updateIdxDict('成熟', oldIdxDict, newIdxDict, runningCnt)
         self.assertEqual(dictTuple, ({'美國': [5356318], '倒數': [568344]}, {'成熟': [2729827], '美國': [], '倒數': [568206]}))
+        runningCnt += 38
+        
+        dictTuple = updateIdxDict('倒數', oldIdxDict, newIdxDict, runningCnt)
+        self.assertEqual(dictTuple, ({'美國': [5356318]}, {'成熟': [2729827], '美國': [], '倒數': [568206,568392]}))
+
+    def test_idxDictToString(self):
+        self.assertEqual(idxDictToString({'成熟': [2729827], '美國': [], '倒數': [568206,568392]}), '成熟,2729827\n美國,\n倒數,568206,568392\n')
+        
+

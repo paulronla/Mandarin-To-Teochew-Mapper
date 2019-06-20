@@ -9,6 +9,9 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
     chaoyinList = []
     chaoyinStr = ''
 
+    if len(pinyinList) > len(validSimpChineseChars):
+        return (line, 0)
+
     for i,pinyin in enumerate(pinyinList):
         char = validSimpChineseChars[i]
         pinyin = pinyin.lower()

@@ -3,7 +3,7 @@ from mandarin_dict_teochew_adder import addTeochewPronunciation
 import json
 from typing import Dict, List
 
-MANDARIN_TEOCHEW_JSON_PATH = '../'
+MANDARIN_TEOCHEW_JSON_PATH = ''
 IDX_DICT_PATH = ''
 MANDARIN_TEOCHEW_DICT_PATH = ''
 
@@ -30,23 +30,25 @@ def idxLineToDict(line: str, idxDict: Dict[str, List[int]]) -> Dict[str, List[in
 def _writeMandarinTeochewDict(filenameWithPath: str, pinyinChaoyinDict: Dict[str, Dict[str, str]], idxDict: Dict[str, List[int]]) -> Dict[str, List[int]]:
     *filePath, filename  = filenameWithPath.replace('\\', '/').rsplit('/', 1)
     filePath = filePath[0] if filePath else ''
-    newIdxDict = {}
+    newIdxDict = {key:[] for key in idxDict}
     runningExtra = 0
     
-    for key in idxDict:
-        newIdxDict[key] = []
-    
-    with open(filePath + filename, 'r', encoding='utf-8') as read_fp:
-        with open(filePath + 'new_' + filename, 'w', encoding='utf-8') as write_fp:
+    with open(filePath + '/' + filename, 'r', encoding='utf-8') as read_fp:
+        with open(filePath + '/' + 'new_' + filename, 'w', encoding='utf-8') as write_fp:
             for line in read_fp:
-                newLine, extraCharCnt = addTeochewPronunciation(line, pinyinChaoyinDict)
-                tradChar, simpChar, *rest = newLine.split()
-                
-                idxDict, newIdxDict = updateIdxDict(tradChar, idxDict, newIdxDict, runningExtra)
-                idxDict, newIdxDict = updateIdxDict(simpChar, idxDict, newIdxDict, runningExtra)
-                
-                runningExtra += extraCharCnt
-                write_fp.write(newLine + '\n')
+                if line.startswith('#'):
+                    write_fp.write(line)
+                else:
+                    newLine, extraCharCnt = addTeochewPronunciation(line, pinyinChaoyinDict)
+                    tradChar, simpChar, *rest = newLine.split()
+                    
+                    idxDict, newIdxDict = updateIdxDict(tradChar, idxDict, newIdxDict, runningExtra)
+                    
+                    if tradChar != simpChar:
+                        idxDict, newIdxDict = updateIdxDict(simpChar, idxDict, newIdxDict, runningExtra)
+                    
+                    runningExtra += extraCharCnt
+                    write_fp.write(newLine)
             
     return idxDictToString(newIdxDict)
 
@@ -64,12 +66,12 @@ def updateIdxDict(word: str, oldDict: Dict[str, List[int]], newDict: Dict[str, L
     return (oldDict, newDict)
 
 def idxDictToString(idxDict: Dict[str, List[int]]) -> str:
-    idxString = []
+    idxStringBuilder = []
 
-    for key, idxList in idxDict:
-        idxString.append(key + ',' + ','.join([str(idx) for idx in idxList]) + '\n')
+    for key, idxList in idxDict.items():
+        idxStringBuilder.append(key + ',' + ','.join([str(idx) for idx in idxList]) + '\n')
     
-    return ''.join(idxString)
+    return ''.join(idxStringBuilder)
 
 if __name__ == '__main__':
     with open(MANDARIN_TEOCHEW_JSON_PATH + 'mandarin_teochew.json', 'r', encoding='utf-8') as f:
