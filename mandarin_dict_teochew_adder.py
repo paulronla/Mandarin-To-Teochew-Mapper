@@ -7,7 +7,7 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
     simpChineseChars = word.getSimpChars()
     validSimpChineseChars = _mapInvalidChars(simpChineseChars)
     chaoyinList = []
-    chaoyinStr = ''
+    chaoyinStr = '<>'
 
     if len(pinyinList) > len(validSimpChineseChars):
         return (line, 0)
@@ -31,7 +31,7 @@ def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str
 
     for chaoyin in chaoyinList:
         if chaoyin != '???':
-            chaoyinStr = '/' + ' '.join(chaoyinList)
+            chaoyinStr = '<' + ' '.join(chaoyinList) + '>'
             break
     
     return (word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] ' + chaoyinStr + word.getDefinitions(), len(chaoyinStr))
