@@ -1,45 +1,54 @@
-#coding=utf-8
 from typing import List, Dict, Tuple
 
-def addTeochewPronunciation(line: str, pinyinChaoyinDict: Dict[str, Dict[str,str]]) -> (str, int):
-    word = DictEntry(line)
-    pinyinList = word.getPinyinList()
-    simpChineseChars = word.getSimpChars()
-    validSimpChineseChars = _mapInvalidChars(simpChineseChars)
-    chaoyinList = []
-    chaoyinStr = '<>'
 
-    if len(pinyinList) > len(validSimpChineseChars):
+def add_teochew_pronunciation(
+        line: str, pinyin_chaoyin_dict: Dict[str, Dict[str, str]]
+        ) -> Tuple[str, int]:
+    word = DictEntry(line)
+    pinyin_list = word.get_pinyin_list()
+    simp_chinese_chars = word.get_simp_chars()
+    valid_simp_chinese_chars = _map_invalid_chars(simp_chinese_chars)
+    chaoyin_list = []
+    chaoyin_str = '<>'
+
+    if len(pinyin_list) > len(valid_simp_chinese_chars):
         return (line, 0)
 
-    for i,pinyin in enumerate(pinyinList):
-        char = validSimpChineseChars[i]
+    for i,pinyin in enumerate(pinyin_list):
+        char = valid_simp_chinese_chars[i]
         pinyin = pinyin.lower()
         
-        if char in pinyinChaoyinDict:
-            pinyinChaoyinMapping = pinyinChaoyinDict[char]
+        if char in pinyin_chaoyin_dict:
+            pinyin_chaoyin_mapping = pinyin_chaoyin_dict[char]
             
-            if pinyin in pinyinChaoyinMapping:
-                chaoyin = pinyinChaoyinMapping[pinyin]
-                chaoyinList.append(chaoyin)
+            if pinyin in pinyin_chaoyin_mapping:
+                chaoyin = pinyin_chaoyin_mapping[pinyin]
+                chaoyin_list.append(chaoyin)
 
             else:
-                chaoyinList.append('|'.join({chaoyin:None for chaoyinGroup in pinyinChaoyinMapping.values() for chaoyin in chaoyinGroup.split('|')}))
+                chaoyin_list.append('|'.join({chaoyin: None 
+                        for chaoyin_group in pinyin_chaoyin_mapping.values() 
+                        for chaoyin in chaoyin_group.split('|')
+                        }))
         
         else:
-            chaoyinList.append('???')
+            chaoyin_list.append('???')
 
-    for chaoyin in chaoyinList:
+    for chaoyin in chaoyin_list:
         if chaoyin != '???':
-            chaoyinStr = '<' + ' '.join(chaoyinList) + '>'
+            chaoyin_str = '<' + ' '.join(chaoyin_list) + '>'
             break
     
-    return (word.getTradChars() + ' ' + simpChineseChars + ' [' + ' '.join(pinyinList) + '] ' + chaoyinStr + word.getDefinitions(), len(chaoyinStr))
+    return (word.get_trad_chars() 
+            + ' ' + simp_chinese_chars + ' [' + ' '.join(pinyin_list) 
+            + '] ' + chaoyin_str + word.get_definitions(), 
+            len(chaoyin_str))
 
-def _mapInvalidChars(chineseWords: str) -> str:
+
+def _map_invalid_chars(chinese_words: str) -> str:
     ans = []
 
-    for char in chineseWords:
+    for char in chinese_words:
         if char.isdigit():
             ans.append(['〇','一','二','三','四','五','六','七','八','九'][int(char)])
         elif char in '，。？！':
@@ -49,24 +58,26 @@ def _mapInvalidChars(chineseWords: str) -> str:
     
     return ''.join(ans)
 
+
 class DictEntry:
     def __init__(self, line: str):
-        self._tradChars, self._simpChars, self._pinyinList, self._definition = self._process(line)
+        (self._trad_chars, self._simp_chars, 
+            self._pinyin_list, self._definition) = self._process(line)
 
-    def _process(self, line: str) -> Tuple[str,str,List[str],str]:
+    def _process(self, line: str) -> Tuple[str, str, List[str], str]:
         beg, bracket, definition = line.partition('] ')
         characters, bracket, pinyin = beg.partition(' [')
 
         return (*characters.split(), pinyin.split(), definition)
 
-    def getDefinitions(self) -> str:
+    def get_definitions(self) -> str:
         return self._definition
 
-    def getSimpChars(self) -> str:
-        return self._simpChars
+    def get_simp_chars(self) -> str:
+        return self._simp_chars
 
-    def getPinyinList(self) -> List[str]:
-        return self._pinyinList
+    def get_pinyin_list(self) -> List[str]:
+        return self._pinyin_list
 
-    def getTradChars(self) -> str:
-        return self._tradChars
+    def get_trad_chars(self) -> str:
+        return self._trad_chars

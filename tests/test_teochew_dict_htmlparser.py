@@ -1,13 +1,13 @@
-#coding=utf-8
 import sys
 sys.path.append('../.')
 import unittest
 import json
-from teochew_dict_htmlparser import Teochew_Dict_HTMLParser
+from teochew_dict_htmlparser import TeochewDictHTMLParser
 
-class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
-    def test_getTeochewDict(self):
-        parser = Teochew_Dict_HTMLParser()
+
+class TestTeochewDictHTMLParser(unittest.TestCase):
+    def test_get_teochew_dict(self):
+        parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
                   <p>片</p>	
@@ -59,8 +59,9 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </ul>
                 </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'片': {'pian4': 'piang3|pin3(白)', 'pian1': 'piang3'}})
-        parser = Teochew_Dict_HTMLParser()
+        self.assertEqual(parser.get_teochew_dict(),
+                        {'片': {'pian4': 'piang3|pin3(白)', 'pian1': 'piang3'}})
+        parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
                   <p>亡</p>	
@@ -96,8 +97,9 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </ul>
                 </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'亡': {'wang2': 'bhuang5|mang5(汕)(又)', 'wu2': 'bho5'}})
-        parser = Teochew_Dict_HTMLParser()
+        self.assertEqual(parser.get_teochew_dict(),
+                        {'亡': {'wang2': 'bhuang5|mang5(汕)(又)', 'wu2': 'bho5'}})
+        parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
                   <p>张</p>	
@@ -256,8 +258,11 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </ul>
                 </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'张': {'zhang1': 'dion1(白)(姓)|ziang1(文)|dion3'}, '掀': {'xian1':'hiang1|hng1(又)|heng1(汕)(又)|hiaon1'}})
-        parser = Teochew_Dict_HTMLParser()
+        self.assertEqual(parser.get_teochew_dict(), {
+                        '张': {'zhang1': 'dion1(白)(姓)|ziang1(文)|dion3'}, 
+                        '掀': {'xian1':'hiang1|hng1(又)|heng1(汕)(又)|hiaon1'}
+                        })
+        parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
                   <p>陂</p>	
@@ -418,8 +423,15 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </ul>
                 </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'陂': {'bei1': 'bi1', 'pi2': 'pi5', 'po1': 'po1|bo1(汕)'}, '𫢗': {'': 'diang5'}, '仆': {'pu1': 'pog4', 'pu2': 'bog8'}, '鶪': {'ju2': 'gu6'}, '谁': {'shui2': 'sui5', 'shei2': 'sui5'}, '熟': {'shu2': 'sêg8', 'shou2': 'sêg8'}})
-        parser = Teochew_Dict_HTMLParser()
+        self.assertEqual(parser.get_teochew_dict(), {
+                        '陂': {'bei1': 'bi1', 'pi2': 'pi5', 'po1': 'po1|bo1(汕)'}, 
+                        '𫢗': {'': 'diang5'}, 
+                        '仆': {'pu1': 'pog4', 'pu2': 'bog8'}, 
+                        '鶪': {'ju2': 'gu6'}, 
+                        '谁': {'shui2': 'sui5', 'shei2': 'sui5'}, 
+                        '熟': {'shu2': 'sêg8', 'shou2': 'sêg8'}
+                        })
+        parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
                   <p>贠</p>	
@@ -822,7 +834,18 @@ class Test_Teochew_Dict_HTMLParser(unittest.TestCase):
                 </ul>
                 </dd>
              </dl>''')
-        self.assertEqual(parser.getTeochewDict(),{'贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, '二': {'er4': 'no6(训)|ri6'}, '阿': {'a1': 'a1', 'e1': 'o1'}, '殖': {'zhi2': 'sêg4|sig8', 'shi5': 'sig8'}, '五': {'wu3': 'ngou6(白)|ngou2|u2(文)|u5'}, '喔': {'o1': 'o1', 'wo1': 'og4'}})
+        self.assertEqual(parser.get_teochew_dict(), {
+                        '贠': {'yuan2': 'uang5', 'yun4': 'ung7(姓)'}, 
+                        '渐': {'jian4': 'ziam6', 'jian1': 'ziam1'}, 
+                        '嗳': {'ai3': 'ai3|an6', 'ai4': 'ai7', 'ai1': 'ai1'}, 
+                        '赚': {'zhuan4': 'tang3(俗)', 'zuan4': 'zuang3'}, 
+                        '个': {'ge4': 'gai5|go6|gai7', 'ge3': 'gai5|gai7|go6'}, 
+                        '二': {'er4': 'no6(训)|ri6'}, 
+                        '阿': {'a1': 'a1', 'e1': 'o1'}, 
+                        '殖': {'zhi2': 'sêg4|sig8', 'shi5': 'sig8'}, 
+                        '五': {'wu3': 'ngou6(白)|ngou2|u2(文)|u5'}, 
+                        '喔': {'o1': 'o1', 'wo1': 'og4'}
+                        })
 
 if __name__ == '__main__':
     unittest.main()

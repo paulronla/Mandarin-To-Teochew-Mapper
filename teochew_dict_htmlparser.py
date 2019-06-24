@@ -1,194 +1,224 @@
-#coding=utf-8
 from html.parser import HTMLParser
 from typing import Dict, List
 from re import sub
 from html import escape
 
-class Teochew_Dict_HTMLParser(HTMLParser):
+
+class TeochewDictHTMLParser(HTMLParser):
     
     def __init__(self):
         super().__init__()
-        self._last_starttag = None
-        self._last_endtag = None
-        self._teochewDict = {}
-        self._chineseChar = None
-        self._chineseCharEntry = {}
-        self._last_listItemKey = None
-        self._chaoyinTupleList = []
-        self._pinyinList = []
+        self._start_tag = None
+        self._end_tag = None
+        self._teochew_dict = {}
+        self._chinese_char = None
+        self._chinese_char_entry = {}
+        self._curr_category = None
+        self._chaoyin_tuple_list = []
+        self._pinyin_list = []
         
     def handle_starttag(self, tag, attrs):
-        self._last_starttag = tag
+        self._start_tag = tag
 
     def handle_endtag(self, tag):
-        self._last_endtag = tag
+        self._end_tag = tag
 
     def handle_data(self, data):
-        if self._last_starttag == 'p':
-            self._last_starttag = None
-            self._chineseChar = data
+        if self._start_tag == 'p':
+            self._start_tag = None
+            self._chinese_char = data
         
-        if self._last_starttag == 'b':
-            self._last_starttag = None
-            self._last_listItemKey = data
+        if self._start_tag == 'b':
+            self._start_tag = None
+            self._curr_category = data
 
-        if self._last_endtag == 'b':
-            self._last_endtag = None
+        if self._end_tag == 'b':
+            self._end_tag = None
 
-            if self._last_listItemKey in ('潮州音：,汕头音：'):
-                self._appendChaoyinList(data)
+            if self._curr_category in ('潮州音：,汕头音：'):
+                self._append_chaoyin_list(data)
             
-            if self._last_listItemKey == '拼    音：':
-                self._pinyinList.append(self._transformPinyinTone(data.strip()))
+            if self._curr_category == '拼    音：':
+                self._pinyin_list.append(self._transform_pinyin_tone(data.strip()))
             
-            if self._last_listItemKey == '字    义：':
-                self._chineseCharEntry = self._processCharDef(data)
-                self._teochewDict[self._chineseChar] = self._chineseCharEntry
-                self._resetStateForNextChar()
+            if self._curr_category == '字    义：':
+                self._chinese_char_entry = self._process_char_def(data)
+                self._teochew_dict[self._chinese_char] = self._chinese_char_entry
+                self._reset_state_for_next_char()
 
     def feed(self, data):
         escaped = sub('<[^\x00-\xFF]+?>', lambda match: escape(match.group(0)), data)
         super().feed(escaped)
     
-    def getTeochewDict(self) -> Dict[str,Dict[str,str]]:
-        return self._teochewDict
+    def get_teochew_dict(self) -> Dict[str,Dict[str,str]]:
+        return self._teochew_dict
             
-    def _extractChaoyin(self, data: str) -> str:
-        chaoyinSplit = data.strip('[ ').split()
-        chaoyinSplit[1] = chaoyinSplit[1][chaoyinSplit[1].find(']')+1:]
-        parenthesisIndex = chaoyinSplit[1].find('（')
+    def _extract_chaoyin(self, data: str) -> str:
+        """ 
+        Ex input: [ig4 乙]（又）
+        Desired output: ig4(又)
 
-        if self._chaoyinTupleList and '潮' in self._chaoyinTupleList[-1][0] and self._chaoyinTupleList[-1][2] and '汕' in self._last_listItemKey:
-            chaoyinSplit[0] += '(汕)'
+        (汕) is used to indicate a pronunciation that is specific to the 
+            prestigious (Shantou) form of the Teochew dialect and not 
+            redundant with the Chaozhou spoken variant
+
+        """
+        *chaoyin, homophone_and_indicator = data.strip('[ ').split()
+        chaoyin_indicator = homophone_and_indicator[homophone_and_indicator.find(']')+1:]
+
+        if self._chaoyin_tuple_list:
+            prev_category, prev_chaoyin, prev_chaoyin_is_prestige = self._chaoyin_tuple_list[-1]
+            
+            if '潮' in prev_category and prev_chaoyin_is_prestige and '汕' in self._curr_category:
+                chaoyin.append('(汕)')
+
+        for i, char in enumerate(chaoyin_indicator):
+            if char == '）':
+                chaoyin.append('(' + chaoyin_indicator[i-1] + ')')
         
-        while ~parenthesisIndex:
-            chaoyinSplit[0] += '('+chaoyinSplit[1][parenthesisIndex+1]+')'
-            parenthesisIndex = chaoyinSplit[1].find('（',parenthesisIndex+3)
-        
-        return chaoyinSplit[0]
+        return ''.join(chaoyin)
     
-    def _appendChaoyinList(self, data: str) -> None:
-        chaoyin = self._extractChaoyin(data)
+    def _append_chaoyin_list(self, data: str) -> None:
+        """SIDE EFFECT: self._chaoyin_tuple_list
+        """
+        chaoyin = self._extract_chaoyin(data)
 
-        for idx in [idx for idx, chaoyinTuple in enumerate(self._chaoyinTupleList) if chaoyin.split('(')[0] == chaoyinTuple[1].split('(')[0]]:
-            tup = self._chaoyinTupleList[idx] 
-            self._chaoyinTupleList[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
+        for idx in [idx for idx, chaoyin_tuple in enumerate(self._chaoyin_tuple_list) 
+                if chaoyin.split('(')[0] == chaoyin_tuple[1].split('(')[0]]:
+            tup = self._chaoyin_tuple_list[idx] 
+            self._chaoyin_tuple_list[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
             return
         
-        self._chaoyinTupleList.append((self._last_listItemKey,chaoyin,self._isPrestigeChaoyin(chaoyin)))
+        self._chaoyin_tuple_list.append(
+            (self._curr_category, chaoyin, self._is_prestige_chaoyin(chaoyin))
+        )
     
-    def _isPrestigeChaoyin(self, chaoyin: str) -> bool:
+    def _is_prestige_chaoyin(self, chaoyin: str) -> bool:
         for suffix in ('iê', 'iou', 'uêg', 'uêng'):
             if suffix in chaoyin:
                 return False
 
         return True
 
-    def _processCharDef(self, entry: str) -> Dict[str,str]:
-        charPinyinChaoyin = {}
+    def _process_char_def(self, entry: str) -> Dict[str,str]:
+        """
+        The explanation portion of each Chinese character potentially gives 
+        the mapping between specific pinyins to chaoyins, when there are 
+        multiple pinyins and chaoyins.
+        """
+        char_pinyin_chaoyin_map = {}
         word = []
-        chaoyinList = []
-        currPinyin = None
+        chaoyin_list = []
+        curr_pinyin = None
 
         for char in entry:
             char = char.lower()
             if char in {'0','1','2','3','4','5','6','7','8','9',
-                'a','b','c','d','e','f','g','h','i','j','k','l','m',
-                'n','o','p','q','r','s','t','u','v','w','x','y','z',
-                'ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō',
-                'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
+                    'a','b','c','d','e','f','g','h','i','j','k','l','m',
+                    'n','o','p','q','r','s','t','u','v','w','x','y','z',
+                    'ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō',
+                    'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
                 word.append(char)
                 continue
             
-            if self._isChaoyin(word):
-                potentialChaoyin = ''.join(word)
+            if self._is_chaoyin(word):
+                potential_chaoyin = ''.join(word)
                 word = []
 
-                if potentialChaoyin in [chaoyin.split('(')[0] for chaoyin in chaoyinList]:
+                if potential_chaoyin in [chaoyin.split('(')[0] for chaoyin in chaoyin_list]:
                     continue
 
-                for chaoyinTuple in self._chaoyinTupleList:
-                    chaoyin = chaoyinTuple[1].split('(')[0]
+                for chaoyin_tuple in self._chaoyin_tuple_list:
+                    chaoyin_type, chaoyin_with_indicators, chaoyin_is_prestige = chaoyin_tuple
+                    chaoyin, *indicators = chaoyin_with_indicators.split('(')
 
-                    if chaoyin == potentialChaoyin and chaoyinTuple[2]:
-                        chaoyinList.append(chaoyinTuple[1])
+                    if chaoyin == potential_chaoyin and chaoyin_is_prestige:
+                        chaoyin_list.append(chaoyin_with_indicators)
                         break
 
             else:
-                potentialPinyin = ''.join(word)
+                potential_pinyin = ''.join(word)
 
-                if not potentialPinyin or potentialPinyin.isdigit():
+                if not potential_pinyin or potential_pinyin.isdigit():
                     word = []
                     continue
 
-                potentialPinyin = self._transformPinyinTone(potentialPinyin)
+                potential_pinyin = self._transform_pinyin_tone(potential_pinyin)
                 word = []
 
-                for pinyin in self._pinyinList:
-                    if pinyin == potentialPinyin:
-                        if currPinyin and chaoyinList:
-                            charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
+                for pinyin in self._pinyin_list:
+                    if pinyin == potential_pinyin:
+                        if curr_pinyin and chaoyin_list:
+                            char_pinyin_chaoyin_map = self._gen_pinyin_chaoyin_map(
+                                                    curr_pinyin, chaoyin_list, 
+                                                    char_pinyin_chaoyin_map)
                             
-                        currPinyin = pinyin
-                        chaoyinList = []
+                        curr_pinyin = pinyin
+                        chaoyin_list = []
                         break
 
-        if currPinyin and chaoyinList:
-            charPinyinChaoyin = self._generatePinyinChaoyinMapping(currPinyin, chaoyinList, charPinyinChaoyin)
+        if curr_pinyin and chaoyin_list:
+            char_pinyin_chaoyin_map = self._gen_pinyin_chaoyin_map(
+                                    curr_pinyin, chaoyin_list, 
+                                    char_pinyin_chaoyin_map)
 
-        missedPinyinList = [pinyin for pinyin in self._pinyinList if pinyin not in charPinyinChaoyin]
-        missedChaoyinList = [chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2] and chaoyinTuple[1] not in '|'.join(charPinyinChaoyin.values()).split('|')]
+        missed_pinyin_list = [pinyin for pinyin in self._pinyin_list 
+                            if pinyin not in char_pinyin_chaoyin_map]
+        missed_chaoyin_list = [chaoyin_tuple[1] for chaoyin_tuple in self._chaoyin_tuple_list 
+                            if chaoyin_tuple[2] and 
+                            chaoyin_tuple[1] not in '|'.join(char_pinyin_chaoyin_map.values()).split('|')]
 
-        if missedPinyinList and missedChaoyinList:
-            charPinyinChaoyin[missedPinyinList[0]] = '|'.join(missedChaoyinList)
+        if missed_pinyin_list and missed_chaoyin_list:
+            char_pinyin_chaoyin_map[missed_pinyin_list[0]] = '|'.join(missed_chaoyin_list)
 
-            for i in range(1,len(missedPinyinList)):
-                charPinyinChaoyin[missedPinyinList[i]] = charPinyinChaoyin[missedPinyinList[0]]
+            for i in range(1,len(missed_pinyin_list)):
+                char_pinyin_chaoyin_map[missed_pinyin_list[i]] = char_pinyin_chaoyin_map[missed_pinyin_list[0]]
         
-        elif missedPinyinList:
-            charPinyinChaoyin[missedPinyinList[0]] = '|'.join([chaoyinTuple[1] for chaoyinTuple in self._chaoyinTupleList if chaoyinTuple[2]])
+        elif missed_pinyin_list:
+            char_pinyin_chaoyin_map[missed_pinyin_list[0]] = '|'.join([chaoyin_tuple[1] 
+                                                        for chaoyin_tuple in self._chaoyin_tuple_list 
+                                                        if chaoyin_tuple[2]])
 
-            for i in range(1,len(missedPinyinList)):
-                charPinyinChaoyin[missedPinyinList[i]] = charPinyinChaoyin[missedPinyinList[0]]
+            for i in range(1,len(missed_pinyin_list)):
+                char_pinyin_chaoyin_map[missed_pinyin_list[i]] = char_pinyin_chaoyin_map[missed_pinyin_list[0]]
         
-        elif missedChaoyinList:
-            for chaoyin in missedChaoyinList:
-                if not charPinyinChaoyin:
-                    charPinyinChaoyin[''] = chaoyin
+        elif missed_chaoyin_list:
+            for chaoyin in missed_chaoyin_list:
+                if not char_pinyin_chaoyin_map:
+                    char_pinyin_chaoyin_map[''] = chaoyin
                     continue
 
-                for pinyin in charPinyinChaoyin:
-                    charPinyinChaoyin[pinyin] += '|'+chaoyin
+                for pinyin in char_pinyin_chaoyin_map:
+                    char_pinyin_chaoyin_map[pinyin] += '|'+chaoyin
 
-        return charPinyinChaoyin
+        return char_pinyin_chaoyin_map
 
-    def _generatePinyinChaoyinMapping(self, pinyin: str, chaoyinList: List[str], charPinyinChaoyin: Dict[str,str]) -> Dict[str,str]:
-        if pinyin in charPinyinChaoyin:
-            for chaoyin in chaoyinList:
-                if chaoyin not in charPinyinChaoyin[pinyin].split('|'):
-                    charPinyinChaoyin[pinyin] += '|'+chaoyin
+    def _gen_pinyin_chaoyin_map(
+            self, pinyin: str, chaoyin_list: List[str], 
+            char_pinyin_chaoyin_map: Dict[str,str]) -> Dict[str,str]:
+        if pinyin in char_pinyin_chaoyin_map:
+            for chaoyin in chaoyin_list:
+                if chaoyin not in char_pinyin_chaoyin_map[pinyin].split('|'):
+                    char_pinyin_chaoyin_map[pinyin] += '|'+chaoyin
         else:
-            charPinyinChaoyin[pinyin] = '|'.join(chaoyinList)
+            char_pinyin_chaoyin_map[pinyin] = '|'.join(chaoyin_list)
 
-        return charPinyinChaoyin
+        return char_pinyin_chaoyin_map
 
-    def _isChaoyin(self, word: List[str]) -> bool:
+    def _is_chaoyin(self, word: List[str]) -> bool:
         if len(word) < 2:
             return False
 
         char = word[-1]
 
-        if char > '0' and char < '9' and word[-2].isalpha:
-            return True
-        
-        return False
+        return char > '0' and char < '9' and word[-2].isalpha()
 
-    def _transformPinyinTone(self, pinyin: str) -> str:
-        ans = pinyin
+    def _transform_pinyin_tone(self, pinyin: str) -> str:
+        transformed = pinyin
 
         for char in pinyin:
             if char == 'ü':
-                ans = ans.replace(char,'u:',1)
+                transformed = transformed.replace(char,'u:',1)
                 continue
 
             if ord(char) > 127:
@@ -197,25 +227,25 @@ class Teochew_Dict_HTMLParser(HTMLParser):
                     print(pinyin + ' was not transformed correctly')
                     return pinyin
                 if idx < 4:
-                    return ans.replace(char,'a',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'a',1)+str(idx % 4 + 1)
                 if idx < 8:
-                    return ans.replace(char,'e',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'e',1)+str(idx % 4 + 1)
                 if idx < 12:
-                    return ans.replace(char,'i',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'i',1)+str(idx % 4 + 1)
                 if idx < 16:
-                    return ans.replace(char,'o',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'o',1)+str(idx % 4 + 1)
                 if idx < 20:
-                    return ans.replace(char,'u',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'u',1)+str(idx % 4 + 1)
                 if idx < 24:
-                    return ans.replace(char,'u:',1)+str(idx % 4 + 1)
+                    return transformed.replace(char,'u:',1)+str(idx % 4 + 1)
         
-        return ans+'5'
+        return transformed+'5'
     
-    def _resetStateForNextChar(self) -> None:
-        self._last_starttag = None
-        self._last_endtag = None
-        self._chineseChar = None
-        self._chineseCharEntry = {}
-        self._last_listItemKey = None
-        self._chaoyinTupleList = []
-        self._pinyinList = []
+    def _reset_state_for_next_char(self) -> None:
+        self._start_tag = None
+        self._end_tag = None
+        self._chinese_char = None
+        self._chinese_char_entry = {}
+        self._curr_category = None
+        self._chaoyin_tuple_list = []
+        self._pinyin_list = []

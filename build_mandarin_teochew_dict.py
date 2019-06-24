@@ -1,5 +1,4 @@
-#coding=utf-8
-from mandarin_dict_teochew_adder import addTeochewPronunciation
+from mandarin_dict_teochew_adder import add_teochew_pronunciation
 import json
 from typing import Dict, List
 
@@ -7,76 +6,90 @@ MANDARIN_TEOCHEW_JSON_PATH = ''
 IDX_DICT_PATH = ''
 MANDARIN_TEOCHEW_DICT_PATH = ''
 
-def _readIdxToDict(filename: str) -> Dict[str, List[int]]:
-    idxDict = {}
+def _read_idx_to_dict(filename: str) -> Dict[str, List[int]]:
+    idx_dict = {}
 
     with open(filename, 'r', encoding='utf-8') as f:
         for line in f:
-            idxDict = idxLineToDict(line, idxDict)
+            idx_dict = idx_line_to_dict(line, idx_dict)
 
-    return idxDict
+    return idx_dict
 
-def _writeDictToIdx(filename: str, idxDictStr: str) -> None:
+def _write_dict_to_idx(filename: str, idx_dict_str: str) -> None:
     with open(filename, 'w', encoding='utf-8') as f:
-        f.write(idxDictStr)
+        f.write(idx_dict_str)
 
-def idxLineToDict(line: str, idxDict: Dict[str, List[int]]) -> Dict[str, List[int]]:
+def idx_line_to_dict(line: str, idx_dict: Dict[str, List[int]]) -> Dict[
+        str, List[int]]:
     key, *val = line.rstrip().split(',')
     val = [int(idx) for idx in val]
-    idxDict[key] = val
+    idx_dict[key] = val
     
-    return idxDict
+    return idx_dict
 
-def _writeMandarinTeochewDict(filenameWithPath: str, pinyinChaoyinDict: Dict[str, Dict[str, str]], idxDict: Dict[str, List[int]]) -> Dict[str, List[int]]:
-    *filePath, filename  = filenameWithPath.replace('\\', '/').rsplit('/', 1)
-    filePath = filePath[0] if filePath else ''
-    newIdxDict = {key:[] for key in idxDict}
-    runningExtra = 0
+def _write_mandarin_teochew_dict(
+        filename_with_path: str, pinyin_chaoyin_dict: Dict[
+        str, Dict[str, str]], _idx_dict: Dict[str, List[int]]) -> Dict[
+        str, List[int]]:
+    *filepath, filename  = filename_with_path.replace('\\', '/').rsplit('/', 1)
+    filepath = filepath[0] if filepath else ''
+    new_idx_dict = {key:[] for key in _idx_dict}
+    running_extra_chars = 0
     
-    with open(filePath + '/' + filename, 'r', encoding='utf-8') as read_fp:
-        with open(filePath + '/' + 'new_' + filename, 'w', encoding='utf-8') as write_fp:
+    with open(filepath + '/' + filename, 'r', encoding='utf-8') as read_fp:
+        with open(filepath + '/' + 'new_' + filename, 'w', 
+                encoding='utf-8') as write_fp:
             for line in read_fp:
                 if line.startswith('#'):
                     write_fp.write(line)
                 else:
-                    newLine, extraCharCnt = addTeochewPronunciation(line, pinyinChaoyinDict)
-                    tradChar, simpChar, *rest = newLine.split()
+                    new_line, extra_char_cnt = add_teochew_pronunciation(
+                                            line, pinyin_chaoyin_dict)
+                    trad_char, simp_char, *rest = new_line.split()
                     
-                    idxDict, newIdxDict = updateIdxDict(tradChar, idxDict, newIdxDict, runningExtra)
+                    idx_dict, new_idx_dict = update_idx_dict(
+                                trad_char, idx_dict, new_idx_dict, running_extra_chars)
                     
-                    if tradChar != simpChar:
-                        idxDict, newIdxDict = updateIdxDict(simpChar, idxDict, newIdxDict, runningExtra)
+                    if trad_char != simp_char:
+                        idx_dict, new_idx_dict = update_idx_dict(
+                                simp_char, idx_dict, new_idx_dict, running_extra_chars)
                     
-                    runningExtra += extraCharCnt
-                    write_fp.write(newLine)
+                    running_extra_chars += extra_char_cnt
+                    write_fp.write(new_line)
             
-    return idxDictToString(newIdxDict)
+    return idx_dict_to_string(new_idx_dict)
 
-def updateIdxDict(word: str, oldDict: Dict[str, List[int]], newDict: Dict[str, List[int]], runningExtraCnt: int) -> (Dict[str, List[int]], Dict[str, List[int]]):
-    idxList = oldDict[word]
+def update_idx_dict(word: str, old_dict: Dict[str, List[int]], 
+                    new_dict: Dict[str, List[int]], 
+                    running_extra_chars_cnt: int) \
+                    -> (Dict[str, List[int]], Dict[str, List[int]]):
+    idx_list = old_dict[word]
                 
-    if len(idxList) > 1:
-        idx = idxList.pop(0)
+    if len(idx_list) > 1:
+        idx = idx_list.pop(0)
     else:
-        idx, = oldDict.pop(word, None)
+        idx, = old_dict.pop(word, None)
                 
-    idx += runningExtraCnt
-    newDict[word].append(idx)
+    idx += running_extra_chars_cnt
+    new_dict[word].append(idx)
 
-    return (oldDict, newDict)
+    return (old_dict, new_dict)
 
-def idxDictToString(idxDict: Dict[str, List[int]]) -> str:
-    idxStringBuilder = []
+def idx_dict_to_string(idx_dict: Dict[str, List[int]]) -> str:
+    idx_string_builder = []
 
-    for key, idxList in idxDict.items():
-        idxStringBuilder.append(key + ',' + ','.join([str(idx) for idx in idxList]) + '\n')
+    for key, idx_list in idx_dict.items():
+        idx_string_builder.append(key + ',' 
+                + ','.join([str(idx) for idx in idx_list]) + '\n')
     
-    return ''.join(idxStringBuilder)
+    return ''.join(idx_string_builder)
 
 if __name__ == '__main__':
-    with open(MANDARIN_TEOCHEW_JSON_PATH + 'mandarin_teochew.json', 'r', encoding='utf-8') as f:
-        pinyinChaoyinDict = json.load(f)
+    with open(MANDARIN_TEOCHEW_JSON_PATH + 'mandarin_teochew.json', 'r', 
+            encoding='utf-8') as f:
+        pinyin_chaoyin_dict = json.load(f)
     
-    idxDict = _readIdxToDict(IDX_DICT_PATH + 'cedict.idx')
-    newIdxDictString = _writeMandarinTeochewDict(MANDARIN_TEOCHEW_DICT_PATH + 'cedict_ts.u8', pinyinChaoyinDict, idxDict)
-    _writeDictToIdx(IDX_DICT_PATH + 'new_cedict.idx', newIdxDictString)
+    idx_dict = _read_idx_to_dict(IDX_DICT_PATH + 'cedict.idx')
+    new_idx_dict_string = _write_mandarin_teochew_dict(MANDARIN_TEOCHEW_DICT_PATH 
+            + 'cedict_ts.u8', pinyin_chaoyin_dict, idx_dict)
+    _write_dict_to_idx(IDX_DICT_PATH + 'new_cedict.idx', new_idx_dict_string)
