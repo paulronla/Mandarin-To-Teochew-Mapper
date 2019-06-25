@@ -28,12 +28,11 @@ def idx_line_to_dict(line: str, idx_dict: Dict[str, List[int]]) -> Dict[
     return idx_dict
 
 def _write_mandarin_teochew_dict(
-        filename_with_path: str, pinyin_chaoyin_dict: Dict[
-        str, Dict[str, str]], _idx_dict: Dict[str, List[int]]) -> Dict[
-        str, List[int]]:
+        filename_with_path: str, pinyin_chaoyin_dict: Dict[str, Dict[str, str]], 
+        idx_dict: Dict[str, List[int]]) -> Dict[str, List[int]]:
     *filepath, filename  = filename_with_path.replace('\\', '/').rsplit('/', 1)
     filepath = filepath[0] if filepath else ''
-    new_idx_dict = {key:[] for key in _idx_dict}
+    new_idx_dict = {key:[] for key in idx_dict}
     running_extra_chars = 0
     
     with open(filepath + '/' + filename, 'r', encoding='utf-8') as read_fp:

@@ -214,6 +214,8 @@ class TeochewDictHTMLParser(HTMLParser):
         return char > '0' and char < '9' and word[-2].isalpha()
 
     def _transform_pinyin_tone(self, pinyin: str) -> str:
+        """ CE-Dict uses pinyin with tone numbers, not tone markings
+        """
         transformed = pinyin
 
         for char in pinyin:
