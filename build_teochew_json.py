@@ -1,16 +1,15 @@
-#coding=utf-8
 import json
-from teochew_dict_htmlparser import Teochew_Dict_HTMLParser
+from teochew_dict_htmlparser import TeochewDictHTMLParser
 
 TEOCHEW_HTML_PATH = '../../teochew_dict_html/'
 OUTPUT_DIR = './'
 START_PAGE = 0
 END_PAGE = 916
 
-parser = Teochew_Dict_HTMLParser()
+parser = TeochewDictHTMLParser()
 
 for page in range(START_PAGE, END_PAGE):
-    if page == 2:
+    if page == 2: # page 2 pulled from their database is always a duplicate of page 1
         continue
 
     print('Processing page: ' + str(page))
@@ -21,4 +20,4 @@ for page in range(START_PAGE, END_PAGE):
     parser.feed(html_string)
 
 with open(OUTPUT_DIR + 'mandarin_teochew.json', 'w', encoding='utf-8') as f:
-    json.dump(parser.getTeochewDict(), f, ensure_ascii=False, indent=4)
+    json.dump(parser.get_teochew_dict(), f, ensure_ascii=False, indent=4)
