@@ -5041,8 +5041,8 @@
         "li4": "li6"
     },
     "疟": {
-        "yao4": "ngiag8",
-        "nu:e4": "ngiag8"
+        "nu:e4": "ngiag8",
+        "yao4": "ngiag8"
     },
     "疝": {
         "shan4": "sang3"
@@ -6517,7 +6517,7 @@
         "shi3": "sai2|sai3"
     },
     "侉": {
-        "kua3": "huai2|huain2|kua1(文)"
+        "kua3": "huai2|huain2(又)|kua1(文)"
     },
     "佰": {
         "bai3": "bêh4"
@@ -10385,8 +10385,8 @@
         "jiu1": "giu2"
     },
     "虐": {
-        "yao4": "ngiag8",
-        "nu:e4": "ngiag8"
+        "nu:e4": "ngiag8",
+        "yao4": "ngiag8"
     },
     "要": {
         "yao4": "iao3",
@@ -13049,7 +13049,7 @@
     },
     "捋": {
         "luo1": "lug8|luag4(文)",
-        "lu:3": "lug8|luag4(文)"
+        "lu:3": "lug8"
     },
     "挼": {
         "ruo2": "ruê5",
@@ -13756,8 +13756,8 @@
         "pian1": "piang1"
     },
     "偻": {
-        "lou2": "lu5",
-        "lu:3": "lu2"
+        "lu:3": "lu2",
+        "lou2": "lu5"
     },
     "偾": {
         "fen4": "hung2|hung3(又)"
@@ -14060,8 +14060,8 @@
         "fu2": "hug4"
     },
     "率": {
-        "shuai4": "zug4|sug4(又)|lug8",
-        "lu:4": "zug4|sug4(又)|lug8"
+        "shuai4": "zug4|sug4(又)",
+        "lu:4": "lug8"
     },
     "凑": {
         "cou4": "cou3"
@@ -14206,8 +14206,8 @@
         "she1": "cia1"
     },
     "菉": {
-        "lu4": "log8",
-        "lu:4": "lêg8"
+        "lu:4": "lêg8",
+        "lu4": "log8"
     },
     "壸": {
         "kun3": "kung2"
@@ -14440,8 +14440,8 @@
         "mian2": "miang5(文)|mi5(白)"
     },
     "绿": {
-        "lu4": "lêg8",
-        "lu:4": "lêg8"
+        "lu:4": "lêg8",
+        "lu4": "lêg8"
     },
     "缁": {
         "zi1": "ze1"

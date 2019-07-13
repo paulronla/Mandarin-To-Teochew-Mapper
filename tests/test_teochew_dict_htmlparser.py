@@ -847,5 +847,66 @@ class TestTeochewDictHTMLParser(unittest.TestCase):
                         '喔': {'o1': 'o1', 'wo1': 'og4'}
                         })
 
+        parser = TeochewDictHTMLParser()
+        parser.feed('''<dl>
+                <dt>
+                  <p>率</p>	
+                </dt>
+                <dd><ul>
+  	    
+ 		            <li><b>潮州音：</b>[zug4 卒]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/19B9EEB1-A8A7-42E9-A264-8C2399C8B215.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[sug4 术4]（又）
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/4DE4130A-026D-474F-9CF7-BBA6F36F3600.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>潮州音：</b>[lug8 律]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/141B509F-ECC5-4152-A017-C546F222DBA0.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>shuài  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/EFBC5258-F84D-4625-8CDF-1AA0B38CBF8A.mp3"></button></li>
+ 		
+ 		            <li><b>拼    音：</b>lǜ  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/8E6C0FCE-18E5-4CA9-B925-81EE2FFCB881.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>1.shuài||zug4|sug4 ①带领，统领：~队|~师。②轻易地，不细想、不慎重：轻~|草~。③爽直坦白：直~|坦~。④大率，大概，大略：~皆如此。⑤漂亮，俏皮：这字写得真~。也作“帅”。⑥遵循：~由旧章。⑦模范：一方表~。 2.lǜ||lug8 指两个相关的数在一定条件下的比值：速~|增长~|出勤~。</li>
+                    
+                </ul>
+                </dd>
+             </dl>
+             <dl>
+                <dt>
+                  <p>汓</p>	
+                </dt>
+                <dd><ul>
+  	    
+ 		            <li><b>潮州音：</b>[siu5 收5 ]
+ 		  <button class="laba" role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/czh/C2EA48D3-31BE-49DE-8633-F86BD77C9182.mp3" ></button>
+     
+     </li>
+ 		
+ 		            <li><b>拼    音：</b>qiú  <button class="laba2"  role='dict_audio_js'
+     data-rel="http://sound.file.czyzd.com/pth/8CF1326A-45F8-45D2-881E-A58493DC7353.mp3"></button></li>
+ 		
+                    <li><b>字    义：</b>古同“泅”，游水。</li>
+                    
+                </ul>
+                </dd>
+             </dl>''')
+        self.assertEqual(parser.get_teochew_dict(), {
+            '率': {'shuai4': 'zug4|sug4(又)', 'lu:4': 'lug8'},
+            '汓': {'qiu2': 'siu5'}
+        })
+
 if __name__ == '__main__':
     unittest.main()

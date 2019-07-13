@@ -64,6 +64,7 @@ class TeochewDictHTMLParser(HTMLParser):
 
         """
         *chaoyin, homophone_and_indicator = data.strip('[ ').split()
+        chaoyin = [chaoyin[0]]
         chaoyin_indicator = homophone_and_indicator[homophone_and_indicator.find(']')+1:]
 
         if self._chaoyin_tuple_list:
@@ -117,7 +118,7 @@ class TeochewDictHTMLParser(HTMLParser):
                     'a','b','c','d','e','f','g','h','i','j','k','l','m',
                     'n','o','p','q','r','s','t','u','v','w','x','y','z',
                     'ā','á','ǎ','à','ē','é','ě','è','ī','í','ǐ','ì','ō',
-                    'ó','ǒ','ò','ū','ú','ǔ','ù','ê'}:
+                    'ó','ǒ','ò','ū','ú','ǔ','ù','ê','ǖ','ǘ','ǚ','ǜ','ü'}:
                 word.append(char)
                 continue
             
