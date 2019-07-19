@@ -61,6 +61,10 @@ class TestTeochewDictHTMLParser(unittest.TestCase):
              </dl>''')
         self.assertEqual(parser.get_teochew_dict(),
                         {'片': {'pian4': 'piang3|pin3(白)', 'pian1': 'piang3'}})
+        self.assertEqual(parser.get_chaoyin_audio_map(),
+                        {'piêng3': 'EC307987-8B0D-46B6-87DD-56201CC31482',
+                        'piang3': 'E94C598E-552B-469B-B4D5-73FDF87D72F4',
+                        'pin3': '6FE29C11-E1C0-4B7F-B6B8-8E3B73B119F7'})
         parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
@@ -99,6 +103,10 @@ class TestTeochewDictHTMLParser(unittest.TestCase):
              </dl>''')
         self.assertEqual(parser.get_teochew_dict(),
                         {'亡': {'wang2': 'bhuang5|mang5(汕)(又)', 'wu2': 'bho5'}})
+        self.assertEqual(parser.get_chaoyin_audio_map(),
+                        {'bhuang5': '82B4432A-D418-4275-BEAA-04A8738BE89C',
+                        'mang5': '65B079C8-F41A-438E-BFAD-67BFA18A70A4',
+                        'bho5': '0DC6FD41-4584-4BB0-B575-4DC0F9C3AAF1'})
         parser = TeochewDictHTMLParser()
         parser.feed('''<dl>
                 <dt>
@@ -261,6 +269,20 @@ class TestTeochewDictHTMLParser(unittest.TestCase):
         self.assertEqual(parser.get_teochew_dict(), {
                         '张': {'zhang1': 'dion1(白)(姓)|ziang1(文)|dion3'}, 
                         '掀': {'xian1':'hiang1|hng1(又)|heng1(汕)(又)|hiaon1'}
+                        })
+        self.assertEqual(parser.get_chaoyin_audio_map(), {
+                        'diên1': 'DB9E8364-07F3-45E5-AB9B-C56612C8F45C',
+                        'dion1': '33730461-A0AA-44CA-88DD-035681ED93F3', 
+                        'ziang1': '3014D5B2-C49F-47D5-953C-80166E558C44', 
+                        'diên3': '11DF9E89-2871-47A2-B32A-9CD9D1EE8368', 
+                        'dion3': '99CDF1A4-8B01-4EC9-AB69-C247E1FEC392', 
+                        'hiêng1': '97BF937E-B67F-4296-BA15-E4211F772B67', 
+                        'hiang1': 'D91D50C8-DA39-4702-93AA-F5748822D2B7', 
+                        'hng1': '42319BC2-E536-4ED1-8B0B-13DA182ACB02', 
+                        'heng1': '8099DE85-F234-4760-B5DC-A4A4322EB006', 
+                        'hêng1': 'E93587E9-3EA7-4BFA-9DBC-B9BC3823012B', 
+                        'hioun1': '34A848D2-D73C-477E-A763-FF30D644E15A', 
+                        'hiaon1': 'BC90D80B-4040-4F04-83B0-12AAE469F0A2'
                         })
         parser = TeochewDictHTMLParser()
         parser.feed('''<dl>

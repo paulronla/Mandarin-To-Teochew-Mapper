@@ -21,3 +21,6 @@ for page in range(START_PAGE, END_PAGE):
 
 with open(OUTPUT_DIR + 'mandarin_teochew.json', 'w', encoding='utf-8') as f:
     json.dump(parser.get_teochew_dict(), f, ensure_ascii=False, indent=4)
+
+with open(OUTPUT_DIR + 'chaoyin_audio.json', 'w', encoding='utf-8') as f:
+    json.dump(parser.get_chaoyin_audio_map(), f, ensure_ascii=False, indent=4)

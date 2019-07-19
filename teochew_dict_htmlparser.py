@@ -16,9 +16,24 @@ class TeochewDictHTMLParser(HTMLParser):
         self._curr_category = None
         self._chaoyin_tuple_list = []
         self._pinyin_list = []
+        self._curr_chaoyin = None
+        self._chaoyin_audio = {}
         
     def handle_starttag(self, tag, attrs):
         self._start_tag = tag
+
+        if (tag == 'button' 
+                and self._curr_chaoyin not in self._chaoyin_audio 
+                and ('class', 'laba') in attrs):
+            for attr, val in attrs:
+                if attr == 'data-rel':
+                    name_start = val.rfind('/')
+                    name_end = val.rfind('.')
+
+                    if ~name_start and ~name_end:
+                        self._chaoyin_audio[
+                            self._curr_chaoyin] = val[name_start+1 : name_end]
+                        break
 
     def handle_endtag(self, tag):
         self._end_tag = tag
@@ -35,8 +50,11 @@ class TeochewDictHTMLParser(HTMLParser):
         if self._end_tag == 'b':
             self._end_tag = None
 
+            self._curr_chaoyin = data.strip('[ ').split()[0]
+
             if self._curr_category in ('潮州音：,汕头音：'):
-                self._append_chaoyin_list(data)
+                self._chaoyin_tuple_list = self._append_chaoyin_list(data, 
+                                                        self._chaoyin_tuple_list)
             
             if self._curr_category == '拼    音：':
                 self._pinyin_list.append(self._transform_pinyin_tone(data.strip()))
@@ -52,6 +70,9 @@ class TeochewDictHTMLParser(HTMLParser):
     
     def get_teochew_dict(self) -> Dict[str,Dict[str,str]]:
         return self._teochew_dict
+
+    def get_chaoyin_audio_map(self) -> Dict[str, str]:
+        return self._chaoyin_audio
             
     def _extract_chaoyin(self, data: str) -> str:
         """ 
@@ -79,20 +100,21 @@ class TeochewDictHTMLParser(HTMLParser):
         
         return ''.join(chaoyin)
     
-    def _append_chaoyin_list(self, data: str) -> None:
-        """SIDE EFFECT: self._chaoyin_tuple_list
-        """
+    def _append_chaoyin_list(self, data: str, 
+                            chaoyin_tuple_list: List[str]) -> List[str]:
         chaoyin = self._extract_chaoyin(data)
 
-        for idx in [idx for idx, chaoyin_tuple in enumerate(self._chaoyin_tuple_list) 
+        for idx in [idx for idx, chaoyin_tuple in enumerate(chaoyin_tuple_list) 
                 if chaoyin.split('(')[0] == chaoyin_tuple[1].split('(')[0]]:
-            tup = self._chaoyin_tuple_list[idx] 
-            self._chaoyin_tuple_list[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
-            return
+            tup = chaoyin_tuple_list[idx] 
+            chaoyin_tuple_list[idx] =  (tup[0], tup[1].replace('(汕)',''), tup[2])
+            return chaoyin_tuple_list
         
-        self._chaoyin_tuple_list.append(
+        chaoyin_tuple_list.append(
             (self._curr_category, chaoyin, self._is_prestige_chaoyin(chaoyin))
         )
+
+        return chaoyin_tuple_list
     
     def _is_prestige_chaoyin(self, chaoyin: str) -> bool:
         for suffix in ('iê', 'iou', 'uêg', 'uêng'):
@@ -252,3 +274,4 @@ class TeochewDictHTMLParser(HTMLParser):
         self._curr_category = None
         self._chaoyin_tuple_list = []
         self._pinyin_list = []
+        self._curr_chaoyin = None
