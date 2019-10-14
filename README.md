@@ -51,3 +51,12 @@ MANDARIN_TEOCHEW_DICT_PATH = ''
 
 ```new_cedict_ts.u8``` and ```new_cedict.idx``` will be created reflecting the Teochew 
 pronunciation additions
+
+## Map Teochew pronunciations to hashed Teochew audio file names
+
+In order to prevent scraping of Teochew audio from the back end API, ```hash_audio_name.py``` 
+grabs the old filenames from ```chaoyin_audio_map.json``` and appends them with a hash to 
+make brute force guessing too time consuming. The script also generates a new JSON with 
+Teochew pronunciations as the key and the corresponding pronunciation mp3 as the value. The 
+resulting file is used directly in 
+[Teochew-Dictionary-Backend](https://github.com/paulronla/teochew-dictionary-backend).
