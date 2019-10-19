@@ -1,14 +1,17 @@
 import os
 import json
 
-BACKEND_PATH = '../../backend_teochew/Teochew-Dictionary-backend/'
-IDX_NUM_DIGITS = 4
+CHAOYIN_AUDIO_DICT_PATH = './'
+BACKEND_PATH = '../../backend_teochew/Teochew-Dictionary-backend/' #where audio files are stored
+IDX_NUM_DIGITS = 4 #number 
 combined_chaoyin_audio_map = {}
 
-with open('chaoyin_audio.json', 'r', encoding='utf-8') as f:
+with open(CHAOYIN_AUDIO_DICT_PATH 
+        + 'chaoyin_audio.json', 'r', encoding='utf-8') as f:
     audio_hashes = json.load(f)
 
-with open('chaoyin_audio_map.json', 'r', encoding='utf-8') as f:
+with open(CHAOYIN_AUDIO_DICT_PATH 
+        + 'chaoyin_audio_map.json', 'r', encoding='utf-8') as f:
     audio_idxs = json.load(f)
 
 for chaoyin, idx in audio_idxs.items():
@@ -23,5 +26,6 @@ for chaoyin, idx in audio_idxs.items():
 
     combined_chaoyin_audio_map[chaoyin] = new_filename
 
-with open(BACKEND_PATH + 'data/chaoyin_audio_map.json', 'w', encoding='utf-8') as f:
+with open(BACKEND_PATH 
+        + 'data/chaoyin_audio_map.json', 'w', encoding='utf-8') as f:
     json.dump(combined_chaoyin_audio_map, f, indent=4, ensure_ascii=False)

@@ -3,7 +3,8 @@ For every Chinese character, maps the Mandarin pronunciation to Teochew pronunci
 This is accomplished through the below scripts, merging 
 [CC-CEDICT](https://cc-cedict.org) \(public-domain Chinese-English dictionary\) 
 and the [Teochew Phoneme Dictionary](http://www.czyzd.com), producing a 
-a much needed Teochew-Chinese-English dictionary to be used by Teochew applications.
+Teochew-Chinese-English dictionary file to be used by 
+[Teochew-Dictionary-Backend](https://github.com/paulronla/teochew-dictionary-backend).
 
 ## What is Teochew?
 [Teochew](https://en.wikipedia.org/wiki/Teochew_dialect) is a dialect of 
@@ -29,7 +30,7 @@ full Chinese dictionary.
 The script converts HTML scraped from the Teochew Phoneme Dictionary containing entries 
 for over 9000 Chinese characters. HTML can be fetched using 
 [Teochew-Dictionary-Scraper](https://github.com/paulronla/Teochew-Dictionary-Scraper). 
-The ```TEOCHEW_HTML_PATH``` needs to contain the HTML. Update constants as needed:
+The ```TEOCHEW_HTML_PATH``` needs to contain the HTML. Constants are as follows:
 
 ```python
 TEOCHEW_HTML_PATH = '../../teochew_dict_html/'
@@ -41,7 +42,7 @@ END_PAGE = 916
 ### Execute ```build_mandarin_teochew_dict.py```
 This script requires ```mandarin_teochew.json``` from the previous script and the 
 CC-CEDICT file named ```cedict_ts.u8``` and the corresponding index file 
-```cedict.idx```. Update constants as needed:
+```cedict.idx```. Constants are as follows:
 
 ```python
 MANDARIN_TEOCHEW_JSON_PATH = ''
@@ -59,4 +60,11 @@ grabs the old filenames from ```chaoyin_audio_map.json``` and appends them with 
 make brute force guessing too time consuming. The script also generates a new JSON with 
 Teochew pronunciations as the key and the corresponding pronunciation mp3 as the value. The 
 resulting file is used directly in 
-[Teochew-Dictionary-Backend](https://github.com/paulronla/teochew-dictionary-backend).
+[Teochew-Dictionary-Backend](https://github.com/paulronla/teochew-dictionary-backend). 
+Constants are as follows:
+
+```python
+CHAOYIN_AUDIO_DICT_PATH = './'
+BACKEND_PATH = '../../backend_teochew/Teochew-Dictionary-backend/' #where audio files are stored
+IDX_NUM_DIGITS = 4 #number 
+```
