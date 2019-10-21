@@ -1,7 +1,7 @@
 import os
 import json
 
-CHAOYIN_AUDIO_DICT_PATH = './'
+CHAOYIN_AUDIO_DICT_PATH = 'json/'
 BACKEND_PATH = '../../backend_teochew/Teochew-Dictionary-backend/' #where audio files are stored
 IDX_NUM_DIGITS = 4 #number 
 combined_chaoyin_audio_map = {}

@@ -34,7 +34,7 @@ The ```TEOCHEW_HTML_PATH``` needs to contain the HTML. Constants are as follows:
 
 ```python
 TEOCHEW_HTML_PATH = '../../teochew_dict_html/'
-OUTPUT_DIR = './'
+OUTPUT_DIR = 'json/'
 START_PAGE = 0
 END_PAGE = 916
 ```
@@ -45,7 +45,7 @@ CC-CEDICT file named ```cedict_ts.u8``` and the corresponding index file
 ```cedict.idx```. Constants are as follows:
 
 ```python
-MANDARIN_TEOCHEW_JSON_PATH = ''
+MANDARIN_TEOCHEW_JSON_PATH = 'json/'
 IDX_DICT_PATH = ''
 MANDARIN_TEOCHEW_DICT_PATH = ''
 ```
@@ -64,7 +64,7 @@ resulting file is used directly in
 Constants are as follows:
 
 ```python
-CHAOYIN_AUDIO_DICT_PATH = './'
+CHAOYIN_AUDIO_DICT_PATH = 'json/'
 BACKEND_PATH = '../../backend_teochew/Teochew-Dictionary-backend/' #where audio files are stored
-IDX_NUM_DIGITS = 4 #number 
+IDX_NUM_DIGITS = 4 #number of digits for audio track idx
 ```

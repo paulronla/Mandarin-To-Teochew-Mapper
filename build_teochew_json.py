@@ -1,8 +1,11 @@
+import sys
+sys.path.append('modules/')
+sys.path.append('../modules/')
 import json
 from teochew_dict_htmlparser import TeochewDictHTMLParser
 
 TEOCHEW_HTML_PATH = '../../teochew_dict_html/'
-OUTPUT_DIR = './'
+OUTPUT_DIR = 'json/'
 START_PAGE = 0
 END_PAGE = 916
 

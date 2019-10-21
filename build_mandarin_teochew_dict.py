@@ -1,8 +1,11 @@
+import sys
+sys.path.append('modules/')
+sys.path.append('../modules/')
 from mandarin_dict_teochew_adder import add_teochew_pronunciation
 import json
 from typing import Dict, List
 
-MANDARIN_TEOCHEW_JSON_PATH = ''
+MANDARIN_TEOCHEW_JSON_PATH = 'json/'
 IDX_DICT_PATH = ''
 MANDARIN_TEOCHEW_DICT_PATH = ''
 

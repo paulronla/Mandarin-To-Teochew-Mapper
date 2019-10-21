@@ -1,5 +1,6 @@
 import sys
-sys.path.append('../')
+sys.path.append('modules/')
+sys.path.append('../modules/')
 import unittest
 import json
 from mandarin_dict_teochew_adder import add_teochew_pronunciation

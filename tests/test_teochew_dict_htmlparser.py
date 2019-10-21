@@ -1,5 +1,7 @@
+# coding=utf-8
 import sys
-sys.path.append('../.')
+sys.path.append('modules/')
+sys.path.append('../modules/')
 import unittest
 import json
 from teochew_dict_htmlparser import TeochewDictHTMLParser
